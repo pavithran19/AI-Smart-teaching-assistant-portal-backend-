@@ -49,6 +49,12 @@ public class DepartmentService {
         Department department = departmentRepository.findByIdAndCollegeId(id, collegeId)
                 .orElseThrow(() -> new ResourceNotFoundException("Department not found"));
 
+        // Only check for duplicates if the name is actually changing
+        if (!department.getName().equalsIgnoreCase(request.getName())
+                && departmentRepository.existsByNameAndCollegeId(request.getName(), collegeId)) {
+            throw new DuplicateResourceException("Department with this name already exists");
+        }
+
         department.setName(request.getName());
         Department updated = departmentRepository.save(department);
         return DepartmentResponse.fromEntity(updated);
