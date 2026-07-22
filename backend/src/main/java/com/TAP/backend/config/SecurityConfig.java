@@ -26,7 +26,9 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/superadmin/**").permitAll() // TODO: lock down once superadmin auth flow is finalized
+                        .requestMatchers("/api/superadmin/**").permitAll()
+                        // TODO: lock down once superadmin auth flow is finalized
+
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
