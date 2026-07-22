@@ -2,10 +2,11 @@ package com.TAP.backend.controller;
 
 import com.TAP.backend.dto.ApiResponse;
 import com.TAP.backend.model.User;
-import com.TAP.backend.repository.userrepository;
+import com.TAP.backend.repository.UserRepository;
 import com.TAP.backend.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +17,10 @@ import java.util.Optional;
 public class AuthController {
 
     @Autowired
-    private userrepository userrepository;
+    private UserRepository userrepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -28,7 +32,7 @@ public class AuthController {
 
         Optional<User> userOpt = userrepository.findByEmail(email);
 
-        if (userOpt.isEmpty() || !userOpt.get().getPassword().equals(password)) {
+        if (userOpt.isEmpty() || !passwordEncoder.matches(password, userOpt.get().getPassword())) {
             return ResponseEntity.status(401)
                     .body(ApiResponse.error("Invalid email or password"));
         }
