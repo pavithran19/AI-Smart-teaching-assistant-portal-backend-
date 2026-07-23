@@ -25,7 +25,7 @@ public class User {
     private Long collegeId;
 
     public enum Role {
-        SUPER_ADMIN, ADMIN, PRINCIPAL, STAFF
+        SUPER_ADMIN, ADMIN, STAFF
     }
 
     // Getters and setters
